@@ -175,6 +175,8 @@ const Register: React.FC = () => {
           phone: formData.phone,
           email: formData.email,
           password: formData.password,
+          isActivated: 0,
+          activationCode: "",
         }),
       });
 

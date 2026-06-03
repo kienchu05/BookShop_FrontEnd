@@ -9,6 +9,7 @@ import About from "./Layouts/Components/Abouts/About";
 import BookDetail from "./Layouts/Components/Product/Components/BookDetail";
 import RatingBook from "./Layouts/Components/Product/Components/RatingBook";
 import Register from "./Layouts/Components/Users/Register";
+import ActivateAccount from "./Layouts/Components/Users/ActivateAccount";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -44,11 +45,12 @@ function App() {
             path="/book/:id"
             element={
               <>
-                <BookDetail /> 
+                <BookDetail />
               </>
             }
           />
           <Route path="/register" element={<Register />} />
+          <Route path="/activate" element={<ActivateAccount />} />
         </Routes>
         <Footer />
       </BrowserRouter>
