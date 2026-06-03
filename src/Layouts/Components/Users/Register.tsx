@@ -46,7 +46,7 @@ const Register: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/user-account/search/existsByUsername?username=${formData.username}`,
+        `http://localhost:8080/user/check-username?username=${formData.username}`,
       );
       const isExist = await response.json();
 
@@ -76,7 +76,7 @@ const Register: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/user-account/search/existsByEmail?email=${formData.email}`,
+        `http://localhost:8080/user/check-email?email=${formData.email}`,
       );
       const isExist = await response.json();
 
@@ -162,7 +162,7 @@ const Register: React.FC = () => {
 
     try {
       // Dữ liệu hợp lệ, gọi API POST để lưu user mới vào database
-      const url = "http://localhost:8080/user-account/register";
+      const url = "http://localhost:8080/user-account/registerUser";
       // TODO: Viết hàm fetch(URL, { method: 'POST', body: ... }) ở đây
       const response = await fetch(url, {
         method: "POST",
