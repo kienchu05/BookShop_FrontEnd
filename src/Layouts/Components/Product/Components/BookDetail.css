@@ -1,0 +1,17 @@
+.image-container-detail {
+  width: 100%; /* Chiều rộng bằng cột chứa nó */
+  height: 500px; /* Cố định chiều cao, bạn có thể chỉnh lại */
+  background-color: #f8f9fa; /* Màu nền nhẹ nếu ảnh nhỏ hơn khung */
+  display: flex;
+  align-items: center; /* Căn giữa dọc */
+  justify-content: center; /* Căn giữa ngang */
+  overflow: hidden; /* Cắt bớt phần tràn nếu cần */
+  border-radius: 15px; /* Bo góc cho sang */
+}
+
+.image-container-detail img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Giữ nguyên tỉ lệ ảnh, không bị méo */
+  transition: transform 0.3s ease;
+}

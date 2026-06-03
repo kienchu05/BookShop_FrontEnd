@@ -1,0 +1,19 @@
+/*Tạo hiệu ứng scale
+
+/* Hiệu ứng thẻ sách khi di chuột */
+.book-card-hover {
+  /* Khai báo thời gian chuyển động (0.3s) để hiệu ứng mượt mà, không bị giật cục */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  cursor: pointer;
+}
+
+.book-card-hover:hover {
+  /* Phóng to thẻ lên 2% (scale) và nhấc nhẹ lên trên 5px (translateY) */
+  transform: translateY(-5px) scale(1.02);
+
+  /* Tăng độ bóng đổ để tạo cảm giác thẻ sách nổi bật lên không gian 3D */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+}
