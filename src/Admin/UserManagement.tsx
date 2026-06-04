@@ -5,7 +5,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 5; // Số lượng người dùng trên 1 trang
+  const pageSize = 6; // Số lượng người dùng trên 1 trang
 
   useEffect(() => {
     fetchUsers();
@@ -59,12 +59,15 @@ const UserManagement = () => {
     const token = localStorage.getItem("accessToken");
     try {
       // Thay đổi URL API xóa user sao cho khớp với Backend của bạn
-      const response = await fetch(`http://localhost:8080/user-account/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `http://localhost:8080/user-account/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (response.ok) {
         alert("Xóa người dùng thành công!");
