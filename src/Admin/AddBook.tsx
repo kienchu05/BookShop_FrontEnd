@@ -15,7 +15,7 @@ const AddBook = () => {
     description: "",
     quantity: 0,
     avgRating: 0,
-    categories: [] as { name: string }[], // Đảm bảo đây là mảng để Backend có thể nhận dạng đúng
+    categories: [] as string[], // Đảm bảo đây là mảng để Backend có thể nhận dạng đúng
   });
 
   // Load danh sách thể loại từ Backend để hiển thị vào Dropdown
@@ -108,9 +108,9 @@ const AddBook = () => {
             <select
               className="form-select"
               required
-              onChange={(e) =>
-                setBook({ ...book, categories: [{ name: e.target.value }] })
-              }
+              onChange={(e) => {
+                setBook({ ...book, categories: [e.target.value] });
+              }}
             >
               <option value="">Chọn thể loại...</option>
               {categories.map((cat, index) => (
