@@ -10,6 +10,10 @@ import BookDetail from "./Layouts/Components/Product/Components/BookDetail";
 import RatingBook from "./Layouts/Components/Product/Components/RatingBook";
 import Register from "./Layouts/Components/Users/Register";
 import ActivateAccount from "./Layouts/Components/Users/ActivateAccount";
+import Login from "./Layouts/Components/Users/Login";
+import UpdateBook from "./Admin/UpdateBook";
+import BookManagement from "./Admin/BookMangement";
+import AddBook from "./Admin/AddBook";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -51,6 +55,12 @@ function App() {
           />
           <Route path="/register" element={<Register />} />
           <Route path="/activate" element={<ActivateAccount />} />
+          <Route path="/login" element={<Login />} />
+          {/* Các trang dành cho Admin */}
+
+          <Route path="/admin/books" element={<BookManagement />} />
+          <Route path="/admin/add-book" element={<AddBook />} />
+          <Route path="/admin/update-book/:id" element={<UpdateBook />} />
         </Routes>
         <Footer />
       </BrowserRouter>

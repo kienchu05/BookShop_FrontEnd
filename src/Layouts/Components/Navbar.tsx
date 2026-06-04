@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   search: string;
@@ -27,6 +27,29 @@ export default function Navbar({
     setSearch(tempKey); // Lúc này mới chính thức báo cho App.tsx biết để đi tìm sách
   };
 
+  const navigate = useNavigate();
+
+  // Đọc thông tin từ LocalStorage
+  const token = localStorage.getItem("accessToken");
+  const userRole = localStorage.getItem("userRole");
+
+  // Kiểm tra trạng thái
+  const isLoggedIn = !!token; // Nếu có token là true, không có là false
+  const isAdmin = isLoggedIn && userRole?.includes("ADMIN");
+  const isUser = isLoggedIn && !isAdmin;
+  // console.log(isAdmin); // Kiểm tra xem chuỗi role có chứa chữ ADMIN không
+
+  // Hàm Xử lý Đăng xuất
+  const handleLogout = () => {
+    // Xóa sạch dữ liệu trong LocalStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userRole");
+
+    // Đẩy về trang đăng nhập
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3">
       <div className="container">
@@ -51,8 +74,7 @@ export default function Navbar({
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 fs-6">
             <li className="nav-item">
               <Link className="nav-link active" to="/">
-                {" "}
-                Trang chủ{" "}
+                Trang chủ
               </Link>
             </li>
             <li className="nav-item dropdown">
@@ -126,7 +148,7 @@ export default function Navbar({
             </li>
           </ul>
 
-          {/* 3. THAY div THÀNH form VÀ GẮN SỰ KIỆN onSubmit */}
+          {/* Form tìm kiếm */}
           <form className="d-flex me-4" role="search" onSubmit={handleSearch}>
             <select
               className="form-select me-2 rounded-pill"
@@ -158,6 +180,7 @@ export default function Navbar({
             </button>
           </form>
 
+          {/* Các biểu tượng giỏ hàng và người dùng */}
           <div className="d-flex align-items-center mt-3 mt-lg-0">
             <a
               href="#"
@@ -168,6 +191,7 @@ export default function Navbar({
                 <span className="visually-hidden">Giỏ hàng có sản phẩm</span>
               </span>
             </a>
+
             <div className="dropdown">
               <button
                 className="btn btn-link text-white p-0 border-0"
@@ -182,26 +206,111 @@ export default function Navbar({
                 ></i>
               </button>
 
-              {/* Menu xổ xuống (Thêm dropdown-menu-end để menu không bị tràn ra ngoài màn hình) */}
               <ul
                 className="dropdown-menu dropdown-menu-end shadow-sm mt-3"
                 aria-labelledby="userDropdown"
               >
-                <li>
-                  <Link className="dropdown-item fw-semibold py-2" to="/login">
-                    <i className="fas fa-sign-in-alt me-2 text-secondary"></i>{" "}
-                    Đăng nhập
-                  </Link>
-                </li>
-                <li></li>
-                <li>
-                  <Link
-                    className="dropdown-item fw-semibold py-2"
-                    to="/register"
-                  >
-                    <i className="fas fa-user-plus me-2 text-info"></i> Đăng ký
-                  </Link>
-                </li>
+                {/* NẾU CHƯA ĐĂNG NHẬP */}
+                {!isLoggedIn && (
+                  <>
+                    <li>
+                      <Link
+                        className="dropdown-item fw-semibold py-2"
+                        to="/login"
+                      >
+                        <i className="fas fa-sign-in-alt me-2 text-secondary"></i>
+                        Đăng nhập
+                      </Link>
+                    </li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li>
+                      <Link
+                        className="dropdown-item fw-semibold py-2"
+                        to="/register"
+                      >
+                        <i className="fas fa-user-plus me-2 text-info"></i>
+                        Đăng ký
+                      </Link>
+                    </li>
+                  </>
+                )}
+
+                {/* 2. ĐÃ ĐĂNG NHẬP (CẢ USER VÀ ADMIN ĐỀU ĐƯỢC XEM HỒ SƠ) */}
+                {isLoggedIn && (
+                  <li>
+                    <Link
+                      className="dropdown-item fw-semibold py-2"
+                      to="/profile"
+                    >
+                      <i className="fas fa-id-card me-2 text-primary"></i>
+                      Hồ sơ của tôi
+                    </Link>
+                  </li>
+                )}
+
+                {/* 3. CHỈ HIỂN THỊ ĐƠN HÀNG NẾU LÀ USER THƯỜNG */}
+                {isUser && (
+                  <li>
+                    <Link
+                      className="dropdown-item fw-semibold py-2"
+                      to="/orders"
+                    >
+                      <i className="fas fa-box-open me-2 text-success"></i>
+                      Đơn hàng của tôi
+                    </Link>
+                  </li>
+                )}
+
+                {/* 4. CHỈ HIỂN THỊ QUẢN LÝ NẾU LÀ ADMIN */}
+                {isAdmin && (
+                  <>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li>
+                      <h6 className="dropdown-header text-warning fw-bold">
+                        QUẢN TRỊ VIÊN
+                      </h6>
+                    </li>
+                    <li>
+                      <Link
+                        className="dropdown-item fw-semibold py-2"
+                        to="/admin/books"
+                      >
+                        <i className="fas fa-book me-2 text-warning"></i>
+                        Quản lý sách
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className="dropdown-item fw-semibold py-2"
+                        to="/admin/users"
+                      >
+                        <i className="fas fa-users-cog me-2 text-warning"></i>
+                        Quản lý người dùng
+                      </Link>
+                    </li>
+                  </>
+                )}
+                {/* NÚT ĐĂNG XUẤT CHO TẤT CẢ TÀI KHOẢN ĐÃ ĐĂNG NHẬP */}
+                {isLoggedIn && (
+                  <>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li>
+                      <button
+                        className="dropdown-item fw-semibold py-2 text-danger"
+                        onClick={handleLogout}
+                      >
+                        <i className="fas fa-sign-out-alt me-2"></i>
+                        Đăng xuất
+                      </button>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

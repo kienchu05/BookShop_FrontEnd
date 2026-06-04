@@ -22,20 +22,44 @@ export async function findByCategoriesId(
   const totalPages = response.page.totalPages;
   const totalElements = response.page.totalElements;
 
-  for (const book in listBooks) {
-    result.push({
-      id: listBooks[book].id,
-      name: listBooks[book].name,
-      priceInit: listBooks[book].priceInit,
-      priceFinal: listBooks[book].priceFinal,
-      description: listBooks[book].description,
-      quantity: listBooks[book].quantity,
-      author: listBooks[book].author,
-      avgRating: listBooks[book].avgRating,
-    });
-  }
+  // Sử dụng Promise.all để lấy thể loại song song cho tất cả sách
+  const booksWithCategories = await Promise.all(
+    listBooks.map(async (book: any) => {
+      let categoryNames = "Chưa có";
+
+      try {
+        // Lấy link thể loại từ _links của mỗi cuốn sách
+        const categoryUrl = book._links?.categories?.href;
+        if (categoryUrl) {
+          const catResponse = await fetch(categoryUrl);
+          if (catResponse.ok) {
+            const catData = await catResponse.json();
+            // Lấy tên thể loại (điều chỉnh 'categoryName' nếu field trong DB của bạn tên khác)
+            categoryNames = catData._embedded?.categories
+              .map((c: any) => c.categoryName || c.name)
+              .join(", ");
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi khi lấy thể loại:", err);
+      }
+
+      return {
+        id: book.id,
+        name: book.name,
+        priceInit: book.priceInit,
+        priceFinal: book.priceFinal,
+        description: book.description,
+        quantity: book.quantity,
+        author: book.author,
+        avgRating: book.avgRating,
+        categoryName: categoryNames, 
+      };
+    }),
+  );
+
   return {
-    result: result,
+    result: booksWithCategories,
     totalPages: totalPages,
     totalElements: totalElements,
   };

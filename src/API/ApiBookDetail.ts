@@ -6,7 +6,7 @@ export async function getBookById(id: number): Promise<BookModel | null> {
 
   try {
     // Gọi API
-    const response = await req_api(endpoint);
+    const response = await req_api(endpoint); 
 
     // Kiểm tra xem response có dữ liệu không
     if (!response) {

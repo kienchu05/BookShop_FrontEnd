@@ -7,6 +7,7 @@ class BookModel {
   quantity?: number;
   author?: string;
   avgRating?: number;
+  categories?: string;
 
   constructor(
     id: number,
@@ -17,15 +18,17 @@ class BookModel {
     quantity?: number,
     author?: string,
     avgRating?: number,
+    categories?: string,
   ) {
     this.id = id;
-    this.name = name;   
+    this.name = name;
     this.description = description;
     this.priceInit = priceInit;
     this.priceFinal = priceFinal;
     this.quantity = quantity;
     this.author = author;
     this.avgRating = avgRating;
+    this.categories = categories;
   }
 }
 

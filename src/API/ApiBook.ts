@@ -21,16 +21,27 @@ export async function getAllBooks(
   const totalPages = response.page.totalPages;
   const totalElements = response.page.totalElements;
 
-  for (const book in listBooks) {
+  for (const book of listBooks) {
+    const categoryUrl = book._links.categories.href;
+
+    // 2. Gọi thêm 1 request để lấy danh sách thể loại của cuốn sách này
+    const catResponse = await fetch(categoryUrl);
+    const catData = await catResponse.json();
+
+    // 3. Trích xuất tên thể loại (giả sử JSON trả về có mảng categories)
+    const categoryNames =
+      catData._embedded?.categories.map((c: any) => c.name).join(", ") ||
+      "Chưa có";
     result.push({
-      id: listBooks[book].id,
-      name: listBooks[book].name,
-      priceInit: listBooks[book].priceInit,
-      priceFinal: listBooks[book].priceFinal,
-      description: listBooks[book].description,
-      quantity: listBooks[book].quantity,
-      author: listBooks[book].author,
-      avgRating: listBooks[book].avgRating,
+      id: book.id,
+      name: book.name,
+      priceInit: book.priceInit,
+      priceFinal: book.priceFinal,
+      description: book.description,
+      quantity: book.quantity,
+      author: book.author,
+      avgRating: book.avgRating,
+      categories: categoryNames,
     });
   }
   return {
