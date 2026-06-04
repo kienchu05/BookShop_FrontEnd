@@ -14,6 +14,7 @@ import Login from "./Layouts/Components/Users/Login";
 import UpdateBook from "./Admin/UpdateBook";
 import BookManagement from "./Admin/BookMangement";
 import AddBook from "./Admin/AddBook";
+import UserManagement from "./Admin/UserManagement";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -61,6 +62,7 @@ function App() {
           <Route path="/admin/books" element={<BookManagement />} />
           <Route path="/admin/add-book" element={<AddBook />} />
           <Route path="/admin/update-book/:id" element={<UpdateBook />} />
+          <Route path="/admin/users" element={<UserManagement />} />
         </Routes>
         <Footer />
       </BrowserRouter>

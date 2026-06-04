@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, FormEvent } from "react";
+import React, { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
@@ -16,6 +16,13 @@ export default function Navbar({
 }: NavbarProps) {
   // 1. Tạo state cục bộ để giữ chữ người dùng đang gõ (chưa gửi đi tìm ngay)
   const [tempKey, setTempKey] = useState("");
+  useEffect(() => {
+    // Nếu tempKey bị xóa sạch (độ dài bằng 0)
+    if (tempKey.length === 0) {
+      setSearch(""); // Reset lại giá trị tìm kiếm ở App.tsx
+      // navigate("/");     // Tùy chọn: nếu muốn quay về hẳn trang chủ
+    }
+  }, [tempKey, setSearch]);
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTempKey(e.target.value);
