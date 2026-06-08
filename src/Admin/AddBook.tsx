@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { fetchWithAuth } from "../Authentication/fetchWithAuth";
 
 const AddBook = () => {
   const navigate = useNavigate();
@@ -41,22 +42,14 @@ const AddBook = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Lấy token Admin để vượt qua hàng rào Spring Security
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("Lỗi: Bạn không có quyền truy cập hoặc phiên làm việc đã hết hạn!");
-      return;
-    }
-
     try {
-      const response = await fetch("http://localhost:8080/book/add-book", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetchWithAuth(
+        "http://localhost:8080/book/add-book",
+        {
+          method: "POST",
+          body: JSON.stringify(book),
         },
-        body: JSON.stringify(book),
-      });
+      );
 
       if (response.ok) {
         alert("Thêm sách mới thành công! 🎉");

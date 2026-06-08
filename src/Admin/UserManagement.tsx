@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { fetchWithAuth } from "../Authentication/fetchWithAuth";
 
 const UserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -16,13 +17,8 @@ const UserManagement = () => {
     if (!token) return;
 
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `http://localhost:8080/user-account?sort=id,desc&size=${pageSize}&page=${currentPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       if (response.ok) {
@@ -59,13 +55,10 @@ const UserManagement = () => {
     const token = localStorage.getItem("accessToken");
     try {
       // Thay đổi URL API xóa user sao cho khớp với Backend của bạn
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `http://localhost:8080/user-account/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
       );
 

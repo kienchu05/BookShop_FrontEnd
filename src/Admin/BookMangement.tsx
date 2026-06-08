@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { fetchWithAuth } from "../Authentication/fetchWithAuth";
 
 // Định nghĩa cấu trúc Thể loại (Điều chỉnh tên biến cho khớp Backend)
 interface Category {
@@ -81,18 +82,9 @@ const BookManagement = () => {
     );
     if (!isConfirm) return;
 
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("Lỗi: Bạn chưa đăng nhập hoặc hết phiên làm việc.");
-      return;
-    }
-
     try {
-      const response = await fetch(`http://localhost:8080/book/${id}`, {
+      const response = await fetchWithAuth(`http://localhost:8080/book/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
 
       if (response.ok) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../Authentication/fetchWithAuth";
 
 const UpdateBook = () => {
   const { id } = useParams();
@@ -82,22 +83,12 @@ const UpdateBook = () => {
     e.preventDefault();
     const token = localStorage.getItem("accessToken");
 
-    // Chặn update nếu không có token
-    if (!token) {
-      alert("Bạn chưa đăng nhập hoặc hết phiên!");
-      return;
-    }
-
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `http://localhost:8080/book/update-book/${id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(book),
+          body: JSON.stringify(book), // fetchWithAuth tự lo Content-Type
         },
       );
 
