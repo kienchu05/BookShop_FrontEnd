@@ -17,6 +17,7 @@ import AddBook from "./Admin/AddBook";
 import UserManagement from "./Admin/UserManagement";
 import UserProfile from "./Layouts/Components/Users/UserProfile";
 import Cart from "./Layouts/Components/Utils/Cart";
+import MyOrder from "./Layouts/Components/Users/MyOrder";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -67,6 +68,7 @@ function App() {
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<MyOrder />} />
         </Routes>
         <Footer />
       </BrowserRouter>
