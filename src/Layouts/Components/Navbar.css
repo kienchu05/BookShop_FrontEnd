@@ -1,0 +1,5 @@
+/* Tăng z-index của dropdown menu để nó luôn nằm trên cùng */
+.dropdown-menu {
+  z-index: 9999 !important;
+  margin-top: 5px !important; /* Tạo khoảng cách nhỏ để không bị dính vào icon user */
+}

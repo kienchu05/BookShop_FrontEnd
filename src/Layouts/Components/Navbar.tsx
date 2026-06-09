@@ -1,5 +1,7 @@
 import React, { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../../Authentication/fetchWithAuth";
+import "./Navbar.css";
 
 interface NavbarProps {
   search: string;
@@ -56,6 +58,47 @@ export default function Navbar({
     // Đẩy về trang đăng nhập
     navigate("/login");
   };
+
+  const [cartCount, setCartCount] = useState(0);
+
+  // Hàm đếm số lượng sách trong giỏ
+  const fetchCartCount = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return; // Nếu chưa đăng nhập thì không gọi
+
+    try {
+      const response = await fetchWithAuth(
+        "http://localhost:8080/cart/my-cart",
+        {
+          method: "GET",
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        // Cộng dồn tất cả quantity của các món trong giỏ
+        const totalItems = data.reduce(
+          (total: number, item: any) => total + item.quantity,
+          0,
+        );
+        setCartCount(totalItems);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy số lượng giỏ hàng:", error);
+    }
+  };
+
+  useEffect(() => {
+    // 1. Gọi lần đầu khi trang web vừa tải xong
+    fetchCartCount();
+
+    // 2. Lắng nghe sự kiện "cartUpdated" từ các trang khác bắn tới
+    window.addEventListener("cartUpdated", fetchCartCount);
+
+    // Dọn dẹp sự kiện khi component unmount
+    return () => {
+      window.removeEventListener("cartUpdated", fetchCartCount);
+    };
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3">
@@ -189,15 +232,23 @@ export default function Navbar({
 
           {/* Các biểu tượng giỏ hàng và người dùng */}
           <div className="d-flex align-items-center mt-3 mt-lg-0">
-            <a
-              href="#"
-              className="nav-link text-white me-4 fs-5 position-relative"
-            >
-              <i className="fas fa-shopping-cart"></i>
-              <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                <span className="visually-hidden">Giỏ hàng có sản phẩm</span>
-              </span>
-            </a>
+            <div className="d-flex align-items-center">
+              <Link
+                to="/cart"
+                className="text-white text-decoration-none me-3 position-relative"
+              >
+                <i className="fas fa-shopping-cart fs-5"></i>
+                {/* NẾU CÓ SÁCH THÌ MỚI HIỂN THỊ CON SỐ */}
+                {cartCount > 0 && (
+                  <span
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style={{ fontSize: "0.65rem" }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
 
             <div className="dropdown">
               <button

@@ -85,9 +85,11 @@ const CarouselItem: React.FC<CarouselItemProps> = ({ book, index }) => {
           {/* Hiển thị Giá tiền */}
           <div className="d-flex align-items-center mb-4">
             <h3 className="text-danger fw-bold me-3 mb-0">
-              {book.priceFinal}K(VNĐ)
+              {book.priceFinal?.toLocaleString("vi-VN")}(VNĐ)
             </h3>
-            <del className="text-muted fs-5">{book.priceInit}K(VNĐ)</del>
+            <del className="text-muted fs-5">
+              {book.priceInit?.toLocaleString("vi-VN")}(VNĐ)
+            </del>
           </div>
         </div>
       </div>

@@ -107,10 +107,10 @@ const BookCard: React.FC<BookProps> = (props) => {
           <div className="mt-auto">
             <div className="d-flex align-items-center mb-3">
               <span className="text-danger fw-bold fs-5 me-2">
-                {props.book.priceFinal}K(VNĐ)
+                {props.book.priceFinal?.toLocaleString("vi-VN")}(VNĐ)
               </span>
               <span className="text-muted text-decoration-line-through small">
-                {props.book.priceInit}K(VNĐ)
+                {props.book.priceInit?.toLocaleString("vi-VN")}(VNĐ)
               </span>
             </div>
 
@@ -125,13 +125,13 @@ const BookCard: React.FC<BookProps> = (props) => {
                 </a>
               </div>
               <div className="col-8">
-                <a
-                  href="#"
+                <Link
+                  to={`/book/${props.book.id}`}
                   className="btn btn-info text-white w-100 fw-bold"
                   title="Thêm vào giỏ"
                 >
                   <i className="fas fa-shopping-cart me-2"></i> Mua
-                </a>
+                </Link>
               </div>
             </div>
           </div>

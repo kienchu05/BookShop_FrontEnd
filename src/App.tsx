@@ -16,6 +16,7 @@ import BookManagement from "./Admin/BookMangement";
 import AddBook from "./Admin/AddBook";
 import UserManagement from "./Admin/UserManagement";
 import UserProfile from "./Layouts/Components/Users/UserProfile";
+import Cart from "./Layouts/Components/Utils/Cart";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -65,6 +66,7 @@ function App() {
           <Route path="/admin/update-book/:id" element={<UpdateBook />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
         <Footer />
       </BrowserRouter>

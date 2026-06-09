@@ -6,6 +6,7 @@ import { getBookById } from "../../../../API/ApiBookDetail";
 import { getAllImages } from "../../../../API/ApiImages";
 import RatingBook from "./RatingBook";
 import "./BookDetail.css";
+import { fetchWithAuth } from "../../../../Authentication/fetchWithAuth";
 
 const BookDetail: React.FC = () => {
   // 1. Lấy mã sách từ URL
@@ -22,9 +23,42 @@ const BookDetail: React.FC = () => {
   const [book, setBook] = useState<BookModel | null>(null);
   const [images, setImages] = useState<ImageModel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
 
   const [anhChinh, setAnhChinh] = useState(0);
+
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+
+  // Hàm xử lý khi bấm nút "Thêm vào giỏ hàng"
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+    try {
+      // Gọi API lên Backend
+      const response = await fetchWithAuth("http://localhost:8080/cart/add", {
+        method: "POST",
+        body: JSON.stringify({
+          bookId: bookId,
+          quantity: quantity,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Đã thêm sách vào giỏ hàng thành công! 🛒");
+        window.dispatchEvent(new Event("cartUpdated"));
+      } else {
+        // Có thể là lỗi 401 (chưa đăng nhập) hoặc lỗi khác
+        const errorData = await response.json().catch(() => ({}));
+        alert(
+          errorData.message || "Có lỗi xảy ra, không thể thêm vào giỏ hàng.",
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi kết nối:", error);
+      alert("Đã xảy ra lỗi hệ thống!");
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   // 3. Gọi API lấy dữ liệu sách & ảnh
   useEffect(() => {
@@ -102,15 +136,15 @@ const BookDetail: React.FC = () => {
             <span className="text-warning">
               <i className="fas fa-star"></i> {book.avgRating} / 5
             </span>
-          </div>  
+          </div>
 
           <div className="d-flex align-items-center mb-4">
-            <h3 className="text-danger fw-bold me-3 mb-0">
-              {book.priceFinal}K(VNĐ)
-            </h3>
-            <h5 className="text-muted text-decoration-line-through mb-0">
-              {book.priceInit}K(VNĐ)
+            <h5 className="text-danger fw-bold">
+              {book.priceFinal?.toLocaleString("vi-VN")}(VNĐ)
             </h5>
+            <span className="text-muted text-decoration-line-through">
+              {book.priceInit?.toLocaleString("vi-VN")}(VNĐ)
+            </span>
           </div>
 
           <div className="mb-4">
@@ -183,8 +217,13 @@ const BookDetail: React.FC = () => {
               </div>
             </div>
             <div className="col-md-8">
-              <button className="btn btn-info text-white fw-bold px-4 py-2 w-100 shadow-sm">
-                <i className="fas fa-shopping-cart me-2"></i> Thêm vào giỏ hàng
+              <button
+                className="btn btn-info w-100 text-white fw-bold"
+                onClick={handleAddToCart}
+                disabled={isAdding} // Khóa nút khi đang gửi API để tránh spam click
+              >
+                <i className="fas fa-shopping-cart me-2"></i>
+                {isAdding ? "Đang xử lý..." : "Thêm vào giỏ hàng"}
               </button>
             </div>
           </div>
