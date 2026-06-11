@@ -17,11 +17,25 @@ export interface OrderModel {
   paymentMethod: string;
   deliverMethod: string;
   orderDetails: OrderDetailModel[];
+  status: string; // PAID, PENDING, CANCELLED
 }
 
 const MyOrders: React.FC = () => {
   const [orders, setOrders] = useState<OrderModel[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "PAID":
+        return <span className="badge bg-success">Đã thanh toán</span>;
+      case "PENDING":
+        return <span className="badge bg-warning">Chờ thanh toán</span>;
+      case "CANCELLED":
+        return <span className="badge bg-danger">Đã hủy</span>;
+      default:
+        return <span className="badge bg-secondary">{status}</span>;
+    }
+  };
 
   useEffect(() => {
     const fetchMyOrders = async () => {
@@ -137,6 +151,7 @@ const MyOrders: React.FC = () => {
                       <i className="fas fa-times me-1"></i> Hủy đơn
                     </button>
                   </div>
+                  <div>{getStatusLabel(order.status)}</div>
                 </div>
 
                 {/* Nội dung Card: Danh sách sách */}

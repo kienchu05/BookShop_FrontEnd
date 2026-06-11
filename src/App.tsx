@@ -18,6 +18,9 @@ import UserManagement from "./Admin/UserManagement";
 import UserProfile from "./Layouts/Components/Users/UserProfile";
 import Cart from "./Layouts/Components/Utils/Cart";
 import MyOrder from "./Layouts/Components/Users/MyOrder";
+import VNPayReturn from "./Layouts/Components/Users/VnPayReturn";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -69,9 +72,11 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<MyOrder />} />
+          <Route path="/vnpay-return" element={<VNPayReturn />} />
         </Routes>
         <Footer />
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }

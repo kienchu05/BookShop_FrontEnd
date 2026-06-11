@@ -229,11 +229,24 @@ const Cart: React.FC = () => {
       );
 
       if (response.ok) {
+        const result = await response.json();
+
+        // PHÂN NHÁNH 1: NẾU CHỌN VNPAY -> CHUYỂN HƯỚNG SANG CỔNG THANH TOÁN
+        if (result.status === "PAYMENT_REDIRECT") {
+          setShowModal(false);
+          setCartItems([]);
+          window.dispatchEvent(new Event("cartUpdated"));
+          // LỆNH QUAN TRỌNG NHẤT: Ép trình duyệt rời khỏi React để sang VNPay
+          window.location.href = result.url;
+          return;
+        }
+
+        // PHÂN NHÁNH 2: NẾU LÀ COD -> THÔNG BÁO VÀ CHUYỂN VỀ TRANG CHỦ
         alert("🎉 Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
         setShowModal(false);
         setCartItems([]);
         window.dispatchEvent(new Event("cartUpdated"));
-        navigate("/"); // Điều hướng về trang chủ hoặc trang lịch sử đơn hàng
+        navigate("/");
       } else {
         const err = await response.text();
         alert("Lỗi đặt hàng: " + err);
