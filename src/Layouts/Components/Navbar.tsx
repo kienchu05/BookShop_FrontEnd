@@ -350,6 +350,15 @@ export default function Navbar({
                         Quản lý người dùng
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        className="dropdown-item fw-semibold py-2"
+                        to="/admin/dashboard"
+                      >
+                        <i className="fas fa-chart-line me-2 text-warning"></i>
+                        Thống kê doanh thu
+                      </Link>
+                    </li>
                   </>
                 )}
                 {/* NÚT ĐĂNG XUẤT CHO TẤT CẢ TÀI KHOẢN ĐÃ ĐĂNG NHẬP */}

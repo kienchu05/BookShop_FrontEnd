@@ -34,7 +34,6 @@ export async function findByCategoriesId(
           const catResponse = await fetch(categoryUrl);
           if (catResponse.ok) {
             const catData = await catResponse.json();
-            // Lấy tên thể loại (điều chỉnh 'categoryName' nếu field trong DB của bạn tên khác)
             categoryNames = catData._embedded?.categories
               .map((c: any) => c.categoryName || c.name)
               .join(", ");

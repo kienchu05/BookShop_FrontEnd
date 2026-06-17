@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchWithAuth } from "../../../Authentication/fetchWithAuth";
 
 const Register: React.FC = () => {
   // 1. Khai báo State lưu trữ dữ liệu form
@@ -164,7 +165,7 @@ const Register: React.FC = () => {
       // Dữ liệu hợp lệ, gọi API POST để lưu user mới vào database
       const url = "http://localhost:8080/user-account/registerUser";
       // TODO: Viết hàm fetch(URL, { method: 'POST', body: ... }) ở đây
-      const response = await fetch(url, {
+      const response = await fetchWithAuth(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -242,13 +243,27 @@ const Register: React.FC = () => {
               )}
 
               {/* Hiển thị thông báo thành công */}
+              {/* Hiển thị thông báo thành công */}
               {success && (
-                <div className="alert alert-success py-2">
-                  Đăng ký thành công! Vui lòng{" "}
-                  <Link to="/login" className="alert-link">
-                    đăng nhập
-                  </Link>
-                  .
+                <div className="alert alert-success py-3 rounded-3 shadow-sm border-0">
+                  <h5 className="alert-heading fw-bold mb-2">
+                    <i className="fas fa-check-circle me-2"></i> Đăng ký thành
+                    công!
+                  </h5>
+                  <p className="mb-0">
+                    Hệ thống đã gửi một email xác thực đến địa chỉ{" "}
+                    <strong>{formData.email}</strong>. Vui lòng kiểm tra hộp thư
+                    đến (hoặc mục Spam/Thư rác) và làm theo hướng dẫn để kích
+                    hoạt tài khoản của bạn.
+                  </p>
+                  <hr />
+                  <p className="mb-0 small text-muted">
+                    Sau khi kích hoạt xong, bạn có thể{" "}
+                    <Link to="/login" className="alert-link fw-bold">
+                      đăng nhập tại đây
+                    </Link>
+                    .
+                  </p>
                 </div>
               )}
 

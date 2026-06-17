@@ -32,9 +32,8 @@ const Login = () => {
       });
 
       const data = await response.json();
-      // console.log("Dữ liệu Backend trả về:", data);
+      console.log("Dữ liệu Backend trả về:", data);
       if (response.ok) {
-        // 1. SỬA LẠI TÊN BIẾN CHO KHỚP VỚI BACKEND (CÓ DẤU GẠCH DƯỚI)
         localStorage.setItem("accessToken", data.access_token);
 
         if (data.refresh_token) {
@@ -46,8 +45,6 @@ const Login = () => {
 
         window.location.href = "/";
       } else {
-        // Bắt lỗi từ Backend (Ví dụ: Sai mật khẩu, Tài khoản chưa kích hoạt)
-        // Spring Boot của bạn có thể trả về thông báo lỗi trong thuộc tính 'message' hoặc 'error'
         setError(data.message || "Tài khoản hoặc mật khẩu không đúng.");
       }
     } catch (err) {
