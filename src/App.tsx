@@ -22,6 +22,7 @@ import VNPayReturn from "./Layouts/Components/Users/VnPayReturn";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DashboardOverview from "./Admin/DashboardOverview";
+import OAuth2RedirectHandler from "./Layouts/Components/Utils/OAuth2RedirectHandler";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -75,6 +76,7 @@ function App() {
           <Route path="/orders" element={<MyOrder />} />
           <Route path="/vnpay-return" element={<VNPayReturn />} />
           <Route path="/admin/dashboard" element={<DashboardOverview />} />
+          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         </Routes>
         <Footer />
       </BrowserRouter>

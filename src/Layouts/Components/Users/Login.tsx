@@ -194,6 +194,12 @@ const Login = () => {
           >
             Đăng ký ngay
           </Link>
+          <a
+            href="http://localhost:8080/oauth2/authorization/google"
+            className="btn btn-outline-danger w-100 rounded-pill py-2"
+          >
+            <i className="fab fa-google me-2"></i> Đăng nhập bằng Google
+          </a>
         </div>
       </div>
     </div>
