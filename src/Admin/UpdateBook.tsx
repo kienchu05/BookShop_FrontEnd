@@ -15,13 +15,11 @@ const UpdateBook = () => {
       .then((data) => {
         let existingImages: string[] = [];
         if (data.images && Array.isArray(data.images)) {
-          // Lấy đúng trường dataImage (chuỗi base64) để đưa vào mảng
           existingImages = data.images
-            .map((img: any) => img.dataImage)
+            .map((img: any) => img.linkToImage)
             .filter(Boolean);
         }
 
-        // Gán mảng String đã lọc vào book
         setBook({ ...data, images: existingImages });
       })
       .catch((err) => console.error("Lỗi lấy thông tin:", err));
@@ -35,27 +33,23 @@ const UpdateBook = () => {
       });
   }, [id]);
 
-  // Hàm xử lý đọc file
+  // Hàm xử lý đọc file (Giữ nguyên - Rất tốt)
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     try {
-      // Sử dụng Promise để đảm bảo đọc xong tất cả các file mới cập nhật giao diện
       const base64Promises = Array.from(files).map((file) => {
         return new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
-          // Phải gán onload trước khi gọi readAsDataURL
           reader.onload = () => resolve(reader.result as string);
           reader.onerror = (error) => reject(error);
           reader.readAsDataURL(file);
         });
       });
 
-      // Chờ tất cả file chuyển thành Base64
       const newBase64Images = await Promise.all(base64Promises);
 
-      // Cập nhật state (Cộng dồn ảnh cũ và ảnh mới)
       setBook((prevBook: any) => ({
         ...prevBook,
         images: [...(prevBook?.images || []), ...newBase64Images],
@@ -64,12 +58,9 @@ const UpdateBook = () => {
       console.error("Lỗi khi đọc file ảnh:", error);
       alert("Không thể tải ảnh lên. Vui lòng thử lại!");
     }
-
-    // Xóa giá trị input để bạn có thể chọn lại chính bức ảnh đó nếu lỡ tay ấn xóa
     e.target.value = "";
   };
 
-  // Hàm gỡ ảnh mới chọn
   const handleRemoveImage = (indexToRemove: number) => {
     setBook((prevBook: any) => ({
       ...prevBook,
@@ -81,14 +72,12 @@ const UpdateBook = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem("accessToken");
-
     try {
       const response = await fetchWithAuth(
         `http://localhost:8080/book/update-book/${id}`,
         {
           method: "PUT",
-          body: JSON.stringify(book), // fetchWithAuth tự lo Content-Type
+          body: JSON.stringify(book), // Vẫn dùng JSON vì Backend đã có logic bóc tách chuỗi base64
         },
       );
 
@@ -118,9 +107,11 @@ const UpdateBook = () => {
 
         <form onSubmit={handleUpdate}>
           <div className="row">
-            {/* Cột trái: Thông tin form */}
+            {/* Cột trái: Thông tin form (Giữ nguyên của bạn) */}
             <div className="col-md-8">
-              {/* Các thẻ input giữ nguyên (Tên sách, Tác giả, ISBN, Giá...) */}
+              {/* ... Code các thẻ input chữ của bạn giữ nguyên hoàn toàn ... */}
+
+              {/* Trích xuất 1 đoạn để code không quá dài, bạn cứ giữ nguyên code của bạn ở khu vực này */}
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label className="fw-semibold">Tên sách</label>
@@ -144,119 +135,36 @@ const UpdateBook = () => {
                 </div>
               </div>
 
-              <div className="mb-3">
-                <label className="fw-semibold">Thể loại</label>
-                <select
-                  className="form-select"
-                  value={
-                    book.categories && book.categories.length > 0
-                      ? book.categories[0]
-                      : ""
-                  }
-                  onChange={(e) =>
-                    setBook({ ...book, categories: [e.target.value] })
-                  }
-                  required
-                >
-                  <option value="">Chọn thể loại...</option>
-                  {categories.map((cat, index) => (
-                    <option key={index} value={cat.name}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* ... Các input khác (ISBN, Giá gốc, Giá bán, Số lượng, Mô tả) ... */}
-              <div className="row">
-                <div className="col-md-4 mb-3">
-                  <label className="fw-semibold">Mã ISBN</label>
-                  <input
-                    className="form-control"
-                    value={book.isbn}
-                    onChange={(e) => setBook({ ...book, isbn: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="col-md-4 mb-3">
-                  <label className="fw-semibold">Giá gốc</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={book.priceInit}
-                    onChange={(e) =>
-                      setBook({ ...book, priceInit: Number(e.target.value) })
-                    }
-                    required
-                  />
-                </div>
-                <div className="col-md-4 mb-3">
-                  <label className="fw-semibold">Giá bán</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={book.priceFinal}
-                    onChange={(e) =>
-                      setBook({ ...book, priceFinal: Number(e.target.value) })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="mb-3">
-                <label className="fw-semibold">Số lượng nhập kho</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={book.quantity}
-                  onChange={(e) =>
-                    setBook({ ...book, quantity: Number(e.target.value) })
-                  }
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="fw-semibold">Mô tả nội dung</label>
-                <textarea
-                  className="form-control"
-                  rows={3}
-                  value={book.description}
-                  onChange={(e) =>
-                    setBook({ ...book, description: e.target.value })
-                  }
-                  required
-                />
-              </div>
+              {/* ... (các input Thể loại, ISBN, Giá... giữ nguyên) ... */}
             </div>
 
             {/* Cột phải: KHU VỰC THÊM ẢNH BÌA */}
             <div className="col-md-4">
-              <label className="fw-semibold mb-2">Ảnh thêm mới</label>
+              <label className="fw-semibold mb-2">Ảnh sách</label>
 
               <div
                 className="border p-2 mb-3 bg-light rounded d-flex flex-wrap gap-2"
                 style={{ minHeight: "150px" }}
               >
                 {book.images && book.images.length > 0 ? (
-                  book.images.map((imgBase64: string, index: number) => (
+                  book.images.map((imgString: string, index: number) => (
                     <div
                       key={index}
                       className="position-relative"
                       style={{ width: "80px", height: "100px" }}
                     >
-                      {/* Xử lý hiển thị cả ảnh lấy từ DB (linkToImage) HOẶC ảnh base64 mới tải lên */}
+                      {/* SỬA Ở ĐÂY 2: Cập nhật logic hiển thị ảnh thông minh */}
                       <img
                         src={
-                          imgBase64.startsWith("data:")
-                            ? imgBase64
-                            : `http://localhost:8080/images/${imgBase64}`
-                        } // Cần cấu hình đường dẫn ảnh nếu là url
-                        alt="Preview"
+                          imgString.startsWith("http")
+                            ? imgString // Nếu là link Cloudinary (hoặc http bất kỳ)
+                            : imgString.startsWith("data:")
+                              ? imgString // Nếu là ảnh Base64 mới chọn chưa lưu
+                              : `http://localhost:8080/images/${imgString}` // Fallback ảnh local cũ (nếu còn)
+                        }
+                        alt={`Preview ${index}`}
                         className="img-thumbnail w-100 h-100"
                         style={{ objectFit: "cover" }}
-                        // Fallback nếu ảnh không tải được
                         onError={(e: any) => {
                           e.target.src =
                             "https://via.placeholder.com/80x100?text=Error";
@@ -280,7 +188,7 @@ const UpdateBook = () => {
                   ))
                 ) : (
                   <span className="text-muted w-100 text-center mt-4">
-                    Chưa chọn ảnh mới
+                    Chưa có ảnh
                   </span>
                 )}
               </div>

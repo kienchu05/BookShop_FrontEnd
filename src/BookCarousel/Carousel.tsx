@@ -29,10 +29,10 @@ const CarouselItem: React.FC<CarouselItemProps> = ({ book, index }) => {
       <div className="row align-items-center p-4 p-md-5">
         {/* Phần Ảnh Bìa Sách */}
         <div className="col-md-5 text-center mb-4 mb-md-0">
-          {images && images.length > 0 && images[0]?.dataImage ? (
+          {images && images.length > 0 && images[0]?.linkToImage ? (
             <Link to={`/book/${book.id}`}>
               <img
-                src={`${images[0].dataImage}`}
+                src={`${images[0].linkToImage}`}
                 className="img-fluid rounded-3 shadow"
                 alt={book.name}
                 style={{ maxHeight: "400px", objectFit: "cover" }}

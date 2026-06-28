@@ -103,7 +103,7 @@ const BookDetail: React.FC = () => {
           {/* Khung ảnh chính */}
           <div className="image-container-detail card border-0 shadow-sm rounded-4 mb-3">
             {images.length > 0 && (
-              <img src={images[anhChinh].dataImage} className="img-fluid" />
+              <img src={images[anhChinh].linkToImage} className="img-fluid" />
             )}
           </div>
 
@@ -112,7 +112,7 @@ const BookDetail: React.FC = () => {
             {images.map((img, index) => (
               <div className="col-3" key={index}>
                 <img
-                  src={img.dataImage}
+                  src={img.linkToImage}
                   className={`img-thumbnail ${index === anhChinh ? "border-info" : ""}`}
                   onClick={() => setAnhChinh(index)}
                   style={{

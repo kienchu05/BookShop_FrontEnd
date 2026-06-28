@@ -11,6 +11,10 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     ...(options.headers as Record<string, string>),
   };
 
+  if (options.body instanceof FormData) {
+    delete headers["Content-Type"];
+  }
+
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`;
   }

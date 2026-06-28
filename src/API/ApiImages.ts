@@ -16,7 +16,6 @@ export async function getAllImages(id: number): Promise<ImageModel[]> {
       name: listImages[image].name,
       isAvatar: listImages[image].isAvatar,
       linkToImage: listImages[image].linkToImage,
-      dataImage: listImages[image].dataImage,
     });
   }
 

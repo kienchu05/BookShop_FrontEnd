@@ -52,10 +52,10 @@ const BookCard: React.FC<BookProps> = (props) => {
   return (
     <div className="col-md-3 mt-3">
       <div className="card h-100 shadow-sm border-0 rounded-3 overflow-hidden book-card-hover">
-        {images && images.length > 0 && images[0]?.dataImage ? (
+        {images && images.length > 0 && images[0]?.linkToImage ? (
           <Link to={`/book/${props.book.id}`}>
             <img
-              src={`${images[0].dataImage}`}
+              src={`${images[0].linkToImage}`}
               alt={props.book.name}
               loading="lazy"
               className="card-img-top"
