@@ -33,7 +33,7 @@ const UpdateBook = () => {
       });
   }, [id]);
 
-  // Hàm xử lý đọc file (Giữ nguyên - Rất tốt)
+  // Hàm xử lý đọc file 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;

@@ -24,16 +24,31 @@ const MyOrders: React.FC = () => {
   const [orders, setOrders] = useState<OrderModel[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 1. Tùy chỉnh màu sắc và giao diện cho các thông báo trạng thái
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "PAID":
-        return <span className="badge bg-success">Đã thanh toán</span>;
+        return (
+          <span className="badge bg-success px-3 py-2 rounded-pill">
+            Đã thanh toán
+          </span>
+        );
       case "PENDING":
-        return <span className="badge bg-warning">Chờ thanh toán</span>;
+        return (
+          <span className="badge bg-warning text-dark px-3 py-2 rounded-pill">
+            Chờ thanh toán
+          </span>
+        );
       case "CANCELLED":
-        return <span className="badge bg-danger">Đã hủy</span>;
+        return (
+          <span className="badge bg-danger px-3 py-2 rounded-pill">Đã hủy</span>
+        );
       default:
-        return <span className="badge bg-secondary">{status}</span>;
+        return (
+          <span className="badge bg-secondary px-3 py-2 rounded-pill">
+            {status}
+          </span>
+        );
     }
   };
 
@@ -62,8 +77,8 @@ const MyOrders: React.FC = () => {
     fetchMyOrders();
   }, []);
 
-  const handleDeleteOrder = async (orderId: number) => {
-    // Hỏi xác nhận trước khi xóa
+  // 2. Hàm xử lý Hủy đơn hàng (Giữ lại đơn, chỉ đổi trạng thái)
+  const handleCancelOrder = async (orderId: number) => {
     if (
       !window.confirm(
         "Bạn có chắc chắn muốn hủy đơn hàng này không? Quá trình này không thể hoàn tác.",
@@ -82,14 +97,17 @@ const MyOrders: React.FC = () => {
 
       if (response.ok) {
         alert("Đã hủy đơn hàng thành công!");
-        // Lọc bỏ đơn hàng vừa xóa ra khỏi mảng state để giao diện cập nhật ngay lập tức mà không cần F5
-        setOrders(orders.filter((order) => order.id !== orderId));
+        setOrders(
+          orders.map((order) =>
+            order.id === orderId ? { ...order, status: "CANCELLED" } : order,
+          ),
+        );
       } else {
         const errorData = await response.json().catch(() => ({}));
         alert(errorData.message || "Lỗi khi hủy đơn hàng!");
       }
     } catch (error) {
-      console.error("Lỗi xóa đơn hàng:", error);
+      console.error("Lỗi hủy đơn hàng:", error);
       alert("Đã xảy ra lỗi hệ thống!");
     }
   };
@@ -139,19 +157,21 @@ const MyOrders: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* NÚT HỦY ĐƠN VÀ TRẠNG THÁI */}
+                  {/* 3. NÚT HỦY ĐƠN VÀ TRẠNG THÁI */}
                   <div>
-                    <span className="badge bg-success px-3 py-2 rounded-pill me-2">
-                      Đặt thành công
-                    </span>
-                    <button
-                      className="btn btn-sm btn-outline-danger rounded-pill px-3"
-                      onClick={() => handleDeleteOrder(order.id)}
-                    >
-                      <i className="fas fa-times me-1"></i> Hủy đơn
-                    </button>
+                    <span className="me-2">{getStatusLabel(order.status)}</span>
+
+                    {/* Chỉ hiển thị nút khi trạng thái là PENDING hoặc PAID */}
+                    {(order.status === "PENDING" ||
+                      order.status === "PAID") && (
+                      <button
+                        className="btn btn-sm btn-outline-danger rounded-pill px-3"
+                        onClick={() => handleCancelOrder(order.id)}
+                      >
+                        <i className="fas fa-times me-1"></i> Hủy đơn
+                      </button>
+                    )}
                   </div>
-                  <div>{getStatusLabel(order.status)}</div>
                 </div>
 
                 {/* Nội dung Card: Danh sách sách */}

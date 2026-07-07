@@ -32,7 +32,7 @@ const UserProfile = () => {
       if (response.ok) {
         const data = await response.json();
         setProfile(data);
-        // console.log("Dữ liệu hồ sơ nhận về:", data);
+         console.log("Dữ liệu hồ sơ nhận về:", data);
         // Khởi tạo dữ liệu cho form sửa
         setFormData({
           name: data.name || "",

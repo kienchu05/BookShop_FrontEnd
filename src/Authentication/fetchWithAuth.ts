@@ -80,6 +80,5 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
       window.location.href = "/login";
     }
   }
-
   return response;
 };
